@@ -4,6 +4,17 @@ export const id = 'hg'
 
 export const label = 'Hg'
 
+export const isActive = async (scheme, root) => {
+  if (scheme !== '') {
+    return false
+  }
+  try {
+    await Exec.exec('hg', ['id'], { cwd: root })
+    return true
+  } catch {
+    return false
+  }
+}
 export const acceptInput = () => {}
 
 export const getBadgeCount = async (cwd) => {
