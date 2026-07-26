@@ -51,29 +51,50 @@ fs.cpSync(join(node, 'dist'), join(root, 'dist', 'node', 'dist'), {
 })
 
 const getAllDependencies = (obj) => {
-  if (!obj || !obj.dependencies) {
+  if (!obj) {
     return []
   }
-  return [obj, ...Object.values(obj.dependencies).flatMap(getAllDependencies)]
+  return [
+    obj,
+    ...Object.values(obj.dependencies || {}).flatMap(getAllDependencies),
+  ]
 }
 
 const getDependencies = () => {
-  const stdout = execSync('npm list --omit=dev --parseable --all', {
-    cwd: extension,
-  }).toString()
-  const lines = stdout.split('\n')
-  return lines.slice(1, -1)
+  const stdout = execSync(
+    'npm list --omit=dev --all --json --long --workspace=packages/extension',
+    {
+      cwd: root,
+    },
+  ).toString()
+  const tree = JSON.parse(stdout)
+  const workspace = tree.dependencies?.[packageJson.name]
+  const dependencies = Object.values(workspace?.dependencies || {})
+    .flatMap(getAllDependencies)
+    .filter((dependency) => !dependency.extraneous && dependency.path)
+    .map((dependency) => dependency.path)
+  return [...new Set(dependencies)]
+}
+
+const getDependencyPath = (dependency) => {
+  const relativeToRoot = path.relative(root, dependency)
+  if (
+    relativeToRoot.startsWith(`..${path.sep}`) ||
+    path.isAbsolute(relativeToRoot)
+  ) {
+    throw new Error(`Dependency is outside the repository: ${dependency}`)
+  }
+  if (dependency.startsWith(`${extension}${path.sep}`)) {
+    return path.relative(extension, dependency)
+  }
+  return relativeToRoot
 }
 
 const dependencies = getDependencies()
 for (const dependency of dependencies) {
-  fs.cpSync(
-    dependency,
-    join(root, 'dist', dependency.slice(extension.length)),
-    {
-      recursive: true,
-    },
-  )
+  fs.cpSync(dependency, join(root, 'dist', getDependencyPath(dependency)), {
+    recursive: true,
+  })
 }
 
 await packageExtension({

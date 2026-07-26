@@ -4,16 +4,18 @@
   "description": "",
   "type": "module",
   "main": "index.js",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "postinstall": "lerna bootstrap --ci",
     "build:extension": "node scripts/build-extension.js",
-    "test": "cd packages/extension && npm run test",
+    "test": "npm test --workspaces --if-present",
     "predev": "npm run build:extension",
     "dev": "node ./node_modules/@lvce-editor/server/bin/server.js --only-extension=packages/extension --test-path=packages/e2e",
     "pree2e": "npm run build:extension",
-    "e2e": "cd packages/e2e && npm run e2e",
+    "e2e": "npm run e2e --workspace=packages/e2e",
     "pree2e:headless": "npm run build:extension",
-    "e2e:headless": "cd packages/e2e && npm run e2e:headless"
+    "e2e:headless": "npm run e2e:headless --workspace=packages/e2e"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +24,6 @@
     "@lvce-editor/package-extension": "^3.2.0",
     "@lvce-editor/server": "^0.93.24",
     "esbuild": "^0.27.2",
-    "lerna": "^6.1.0",
     "prettier": "^3.8.1"
   },
   "xo": {
