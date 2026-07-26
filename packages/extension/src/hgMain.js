@@ -1,5 +1,4 @@
-import * as SourceControlProvider from './parts/SourceControlProvider/SourceControlProvider.js'
+export { activate, deactivate } from './parts/Main/Main.js'
+import { activate } from './parts/Main/Main.js'
 
-export const activate = async () => {
-  vscode.registerSourceControlProvider(SourceControlProvider)
-}
+await activate()

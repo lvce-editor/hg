@@ -6,19 +6,24 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "lerna bootstrap --ci",
+    "build:extension": "node scripts/build-extension.js",
     "test": "cd packages/extension && npm run test",
+    "predev": "npm run build:extension",
     "dev": "node ./node_modules/@lvce-editor/server/bin/server.js --only-extension=packages/extension --test-path=packages/e2e",
+    "pree2e": "npm run build:extension",
     "e2e": "cd packages/e2e && npm run e2e",
+    "pree2e:headless": "npm run build:extension",
     "e2e:headless": "cd packages/e2e && npm run e2e:headless"
   },
   "keywords": [],
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@lvce-editor/package-extension": "^0.0.5",
-    "@lvce-editor/server": "^0.11.7",
+    "@lvce-editor/package-extension": "^3.2.0",
+    "@lvce-editor/server": "^0.93.24",
+    "esbuild": "^0.27.2",
     "lerna": "^6.1.0",
-    "prettier": "^2.8.1"
+    "prettier": "^3.8.1"
   },
   "xo": {
     "rules": {

@@ -12,19 +12,19 @@ jobs:
       matrix:
         include:
           - name: ubuntu-22.04
-            os: ubuntu-22.04
+            os: ubuntu-24.04
           - name: macos-12
-            os: macos-14
+            os: macos-15
           - name: windows-2022
-            os: windows-2022
+            os: windows-2025
     runs-on: ${{ matrix.os }}
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
         with:
           node-version-file: '.nvmrc'
-      - uses: actions/cache@v3
+      - uses: actions/cache@v5
         id: npm-cache
         with:
           path: '**/node_modules'
