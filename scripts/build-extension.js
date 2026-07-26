@@ -1,4 +1,5 @@
 import { mkdir, rm } from 'node:fs/promises'
+import { fileURLToPath } from 'node:url'
 import { build } from 'esbuild'
 
 const browserOutDir = new URL('../packages/extension/dist/', import.meta.url)
@@ -16,10 +17,12 @@ await Promise.all([
   build({
     bundle: true,
     entryPoints: [
-      new URL('../packages/extension/src/hgMain.js', import.meta.url).pathname,
+      fileURLToPath(
+        new URL('../packages/extension/src/hgMain.js', import.meta.url),
+      ),
     ],
     format: 'esm',
-    outfile: new URL('hgMain.js', browserOutDir).pathname,
+    outfile: fileURLToPath(new URL('hgMain.js', browserOutDir)),
     platform: 'browser',
     sourcemap: true,
     external: ['electron', 'node:*'],
@@ -27,10 +30,12 @@ await Promise.all([
   build({
     bundle: true,
     entryPoints: [
-      new URL('../packages/node/src/hgClient.js', import.meta.url).pathname,
+      fileURLToPath(
+        new URL('../packages/node/src/hgClient.js', import.meta.url),
+      ),
     ],
     format: 'esm',
-    outfile: new URL('hgClient.js', nodeOutDir).pathname,
+    outfile: fileURLToPath(new URL('hgClient.js', nodeOutDir)),
     platform: 'node',
     sourcemap: true,
   }),
