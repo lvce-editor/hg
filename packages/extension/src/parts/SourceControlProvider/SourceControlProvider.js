@@ -1,15 +1,26 @@
+import { getPreference, getWorkspaceFolder } from '@lvce-editor/api'
 import * as Exec from '../Exec/Exec.js'
 
 export const id = 'hg'
 
 export const label = 'Hg'
 
+const supportedSchemes = ['', 'file']
+
+const getHgPath = async () => {
+  const configuredPath = await getPreference('hg.path')
+  return typeof configuredPath === 'string' && configuredPath
+    ? configuredPath
+    : 'hg'
+}
+
 export const isActive = async (scheme, root) => {
-  if (scheme !== '') {
+  if (!root || !supportedSchemes.includes(scheme)) {
     return false
   }
   try {
-    await Exec.exec('hg', ['id'], { cwd: root })
+    const hgPath = await getHgPath()
+    await Exec.exec(hgPath, ['id'], { cwd: root })
     return true
   } catch {
     return false
@@ -42,11 +53,11 @@ const parseStatusLines = (lines) => {
 }
 
 export const getChangedFiles = async () => {
-  const cwd = vscode.getWorkspaceFolder()
-  const { stdout } = await Exec.exec('hg', ['status'], { cwd })
+  const cwd = await getWorkspaceFolder()
+  const hgPath = await getHgPath()
+  const { stdout } = await Exec.exec(hgPath, ['status'], { cwd })
   const lines = stdout.split('\n')
-  console.log({ stdout })
-  return parseStatusLines(lines)
+  return parseStatusLines(lines).filter((item) => item.file)
 }
 
 export const fetch = () => {}

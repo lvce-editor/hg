@@ -2,8 +2,26 @@
   "id": "builtin.hg",
   "name": "Hg",
   "description": "Hg SCM Integration",
-  "browser": "src/hgMain.js",
-  "icon": "./icon.png",
+  "browser": "dist/hgMain.js",
+  "isolated": true,
+  "contentSecurityPolicy": ["default-src 'none'", "script-src 'self'"],
+  "compatibility": {
+    "web": false
+  },
+  "rpc": [
+    {
+      "id": "builtin.hg.node",
+      "type": "node",
+      "name": "Hg",
+      "url": "../node/dist/hgClient.js"
+    }
+  ],
   "activation": ["onStartupFinished", "onSourceControl"],
-  "commands": []
+  "commands": [],
+  "configuration": {
+    "hg.path": {
+      "type": "string",
+      "description": "Path to the Mercurial executable."
+    }
+  }
 }

@@ -1,0 +1,11 @@
+{
+  "name": "hg-node",
+  "version": "0.0.0-dev",
+  "description": "Node helpers for the built-in Mercurial integration.",
+  "type": "module",
+  "main": "dist/hgClient.js",
+  "license": "MIT",
+  "dependencies": {
+    "execa": "^9.6.1"
+  }
+}
