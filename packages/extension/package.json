@@ -13,7 +13,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
-    "@lvce-editor/api": "^8.63.0",
+    "@lvce-editor/api": "^8.75.0",
     "@types/jest": "^30.0.0",
     "jest": "^30.1.3",
     "jest-environment-lvce-editor": "^0.70.8"
