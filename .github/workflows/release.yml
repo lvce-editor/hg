@@ -4,7 +4,7 @@ name: release
 on:
   push:
     tags:
-      - "v[0-9]+.[0-9]+.[0-9]+"
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 jobs:
   create-release:
     name: create-release
@@ -27,10 +27,11 @@ jobs:
         with:
           tag_name: ${{ env.RG_VERSION }}
           release_name: ${{ env.RG_VERSION }}
+          draft: true
 
   build-release:
     name: build-release
-    needs: ["create-release"]
+    needs: ['create-release']
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     steps:
@@ -41,7 +42,7 @@ jobs:
       - uses: actions/cache@v5
         id: npm-cache
         with:
-          path: "**/node_modules"
+          path: '**/node_modules'
           key: ${{ runner.os }}-node-${{ hashFiles('package.json', 'package-lock.json') }}-${{ hashFiles('.github/workflows/*.yml') }}
           restore-keys: ${{ runner.os }}-node-
       - name: npm ci
@@ -75,3 +76,7 @@ jobs:
           asset_path: ${{ env.ASSET }}
           asset_name: ${{ env.ASSET }}
           asset_content_type: application/octet-stream
+      - name: Publish GitHub release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh release edit "${{ needs.create-release.outputs.rg_version }}" --draft=false
