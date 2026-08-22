@@ -1,9 +1,10 @@
 import { mkdir, rm } from 'node:fs/promises'
 import { fileURLToPath } from 'node:url'
 import { build } from 'esbuild'
+import { buildNodeProcess } from './build-node-process.js'
 
 const browserOutDir = new URL('../packages/extension/dist/', import.meta.url)
-const nodeOutDir = new URL('../packages/node/dist/', import.meta.url)
+const nodeOutDir = new URL('../packages/extension/node/', import.meta.url)
 
 await Promise.all([
   rm(browserOutDir, { force: true, recursive: true }),
@@ -27,16 +28,5 @@ await Promise.all([
     sourcemap: true,
     external: ['electron', 'node:*'],
   }),
-  build({
-    bundle: true,
-    entryPoints: [
-      fileURLToPath(
-        new URL('../packages/node/src/hgClient.js', import.meta.url),
-      ),
-    ],
-    format: 'esm',
-    outfile: fileURLToPath(new URL('hgClient.js', nodeOutDir)),
-    platform: 'node',
-    sourcemap: true,
-  }),
+  buildNodeProcess(fileURLToPath(new URL('hgProcess.js', nodeOutDir))),
 ])

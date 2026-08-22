@@ -5,7 +5,11 @@
   "type": "module",
   "main": "dist/hgClient.js",
   "license": "MIT",
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  },
   "dependencies": {
+    "@lvce-editor/rpc": "^6.19.1",
     "execa": "^9.6.1"
   }
 }

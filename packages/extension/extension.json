@@ -11,9 +11,9 @@
   "rpc": [
     {
       "id": "builtin.hg.node",
-      "type": "node",
+      "type": "node-process",
       "name": "Hg",
-      "url": "../node/dist/hgClient.js"
+      "url": "node/hgProcess.js"
     }
   ],
   "activation": ["onStartupFinished", "onSourceControl"],

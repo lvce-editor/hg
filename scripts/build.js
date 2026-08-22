@@ -7,7 +7,6 @@ import { packageExtension } from '@lvce-editor/package-extension'
 const __dirname = dirname(fileURLToPath(import.meta.url))
 const root = path.join(__dirname, '..')
 const extension = path.join(root, 'packages', 'extension')
-const node = path.join(root, 'packages', 'node')
 
 fs.rmSync(join(root, 'dist'), { recursive: true, force: true })
 
@@ -30,23 +29,13 @@ fs.copyFileSync(
   join(extension, 'extension.json'),
   join(root, 'dist', 'extension.json'),
 )
-const extensionJsonPath = join(root, 'dist', 'extension.json')
-const extensionJson = JSON.parse(readFileSync(extensionJsonPath, 'utf8'))
-extensionJson.rpc = extensionJson.rpc.map((rpc) => ({
-  ...rpc,
-  url: rpc.url.replace('../node/', 'node/'),
-}))
-fs.writeFileSync(
-  extensionJsonPath,
-  JSON.stringify(extensionJson, null, 2) + '\n',
-)
 fs.cpSync(join(extension, 'src'), join(root, 'dist', 'src'), {
   recursive: true,
 })
 fs.cpSync(join(extension, 'dist'), join(root, 'dist', 'dist'), {
   recursive: true,
 })
-fs.cpSync(join(node, 'dist'), join(root, 'dist', 'node', 'dist'), {
+fs.cpSync(join(extension, 'node'), join(root, 'dist', 'node'), {
   recursive: true,
 })
 
