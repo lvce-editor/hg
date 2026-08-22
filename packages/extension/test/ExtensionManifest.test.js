@@ -12,7 +12,7 @@ test('declares the hg node rpc', () => {
   expect(manifest.rpc).toContainEqual({
     id: 'builtin.hg.node',
     name: 'Hg',
-    type: 'node',
-    url: '../node/dist/hgClient.js',
+    type: 'node-process',
+    url: 'node/hgProcess.js',
   })
 })
